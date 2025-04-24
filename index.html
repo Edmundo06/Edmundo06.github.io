@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Infografías Interactivas: Ámbito de Actuación de Empresas</title>
+  <!-- Cargar Leaflet para mapas -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    header { background: #003366; color: white; padding: 1rem; text-align: center; }
+    #map { height: 400px; width: 100%; }
+    .chart-container { width: 90%; max-width: 800px; margin: 2rem auto; }
+    .infographic { padding: 1rem; }
+    .tooltip { position: absolute; text-align: center; padding: 0.5rem; background: rgba(0,0,0,0.7); color: white; border-radius: 4px; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Clasificación de Empresas por Ámbito de Actuación</h1>
+  </header>
+
+  <section class="infographic">
+    <h2>Mapa Interactivo (Trinidad, Beni, Bolivia)</h2>
+    <div id="map"></div>
+  </section>
+
+  <section class="chart-container">
+    <h2>Distribución de Ejemplos por Tipo</h2>
+    <canvas id="barChart"></canvas>
+  </section>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Inicializar mapa
+    var map = L.map('map').setView([-14.8333, -64.9], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Datos de las seis empresas con sus indicadores
+    var empresas = [
+      {
+        nombre: 'Panificadora Arza',
+        coords: [-14.8340, -64.9000],
+        tipo: 'Local',
+        anio: 2005,
+        empleados: 8,
+        cobertura: 'Ciudad Trinidad',
+        reto: 'Aumentar capacidad de producción'
+      },
+      {
+        nombre: 'ENDE DELBENI S.A.M.',
+        coords: [-14.8280, -64.8970],
+        tipo: 'Departamental',
+        anio: 1998,
+        empleados: 120,
+        cobertura: 'Departamento del Beni',
+        reto: 'Mejorar infraestructura rural'
+      },
+      {
+        nombre: 'Banco Unión S.A.',
+        coords: [-16.5, -68.15],
+        tipo: 'Nacional',
+        anio: 1981,
+        empleados: 2000,
+        cobertura: '9 departamentos de Bolivia',
+        reto: 'Expandir servicios digitales'
+      },
+      {
+        nombre: 'ANAPQUI',
+        coords: [-16.4950, -68.1350],
+        tipo: 'Internacional',
+        anio: 1983,
+        empleados: 150,
+        cobertura: 'Exportación a 15 países',
+        reto: 'Mantener estándares de calidad'
+      },
+      {
+        nombre: 'Tigo Bolivia',
+        coords: [-17.7833, -63.1821],
+        tipo: 'Multinacional',
+        anio: 1990,
+        empleados: 1926,
+        cobertura: 'Países LATAM y África',
+        reto: 'Innovación tecnológica'
+      },
+      {
+        nombre: 'Nestlé Bolivia',
+        coords: [-17.7810, -63.2000],
+        tipo: 'Transnacional',
+        anio: 1971,
+        empleados: 500,
+        cobertura: '130+ países',
+        reto: 'Adaptación al mercado local'
+      }
+    ];
+
+    empresas.forEach(function(e) {
+      var popupContent = '<strong>' + e.nombre + '</strong><br>' +
+                         'Tipo: ' + e.tipo + '<br>' +
+                         'Fundación: ' + e.anio + '<br>' +
+                         'Empleados: ' + e.empleados + '<br>' +
+                         'Cobertura: ' + e.cobertura + '<br>' +
+                         'Reto: ' + e.reto;
+      L.marker(e.coords).addTo(map)
+        .bindPopup(popupContent);
+    });
+
+    // Datos para gráfico
+    var ctx = document.getElementById('barChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Local', 'Departamental', 'Nacional', 'Internacional', 'Multinacional', 'Transnacional'],
+        datasets: [{
+          label: 'Ejemplos asignados',
+          data: [1, 1, 1, 1, 1, 1],
+          backgroundColor: 'rgba(54, 162, 235, 0.7)'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: {
+            enabled: true
+          }
+        },
+        scales: {
+          y: { beginAtZero: true, precision: 0 }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
