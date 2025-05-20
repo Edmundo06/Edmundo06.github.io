@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Infografías Interactivas: Ámbito de Actuación de Empresas</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    header { background: #003366; color: white; padding: 1rem; text-align: center; }
+    #map { height: 400px; width: 100%; }
+    .chart-container { width: 90%; max-width: 800px; margin: 2rem auto; }
+    .infographic { padding: 1rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Clasificación de Empresas por Ámbito de Actuación</h1>
+  </header>
+
+  <section class="infographic">
+    <h2>Mapa Interactivo (Trinidad, Beni, Bolivia)</h2>
+    <div id="map"></div>
+  </section>
+
+  <section class="chart-container">
+    <h2>Distribución de Ejemplos por Tipo</h2>
+    <canvas id="barChart"></canvas>
+  </section>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Inicializar mapa
+    var map = L.map('map').setView([-14.8333, -64.9], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Datos de las seis empresas con sus indicadores y concepto extendido
+    var empresas = [
+      {
+        nombre: 'Panificadora Arza',
+        coords: [-14.8340, -64.9000],
+        tipo: 'Local',
+        cobertura: 'Ciudad Trinidad',
+        concepto: 'Como empresa local, Panificadora Arza centra todos sus esfuerzos en comprender profundamente los gustos y necesidades de la comunidad de Trinidad, ajustando su producción diaria y variedad de productos para garantizar máxima frescura y satisfacción inmediata de sus clientes.'
+      },
+      {
+        nombre: 'ENDE DELBENI S.A.M.',
+        coords: [-14.8280, -64.8970],
+        tipo: 'Departamental',
+        cobertura: 'Departamento del Beni',
+        concepto: 'ENDE DELBENI S.A.M. opera a escala departamental, gestionando la infraestructura eléctrica de todo el territorio beniano, lo cual implica coordinar proyectos de mantenimiento y expansión que cubren tanto zonas urbanas como rurales, asegurando suministro confiable y continuo.'
+      },
+      {
+        nombre: 'Banco Unión S.A.',
+        coords: [-16.5, -68.15],
+        tipo: 'Nacional',
+        cobertura: '9 departamentos de Bolivia',
+        concepto: 'Banco Unión S.A. está presente en todo el país, ofreciendo servicios financieros desde grandes ciudades hasta comunidades remotas, adaptando productos bancarios y digitales a las particularidades de cada región para impulsar la inclusión y el desarrollo económico nacional.'
+      },
+      {
+        nombre: 'ANAPQUI',
+        coords: [-16.4950, -68.1350],
+        tipo: 'Internacional',
+        cobertura: 'Exportación a 15 países',
+        concepto: 'ANAPQUI trasciende fronteras al exportar quinua boliviana a mercados en América, Europa y Asia, coordinando calidad, logística y satisfacción de normativas internacionales sin necesidad de oficinas propias en el extranjero.'
+      },
+      {
+        nombre: 'Tigo Bolivia',
+        coords: [-17.7833, -63.1821],
+        tipo: 'Multinacional',
+        cobertura: 'Países LATAM y África',
+        concepto: 'Tigo Bolivia forma parte de una red multinacional que comparte tecnología y estándares globales, mientras implementa estrategias de mercado locales que le permiten ofrecer servicios de telecomunicaciones competitivos y adaptados a cada país en América Latina y África.'
+      },
+      {
+        nombre: 'Nestlé Bolivia',
+        coords: [-17.7810, -63.2000],
+        tipo: 'Transnacional',
+        cobertura: '130+ países',
+        concepto: 'Nestlé Bolivia representa un modelo transnacional, combinando políticas globales de nutrición con la adaptabilidad a las preferencias y regulaciones locales, descentralizando decisiones clave para responder ágilmente a las demandas de cada mercado.'
+      }
+    ];
+
+    empresas.forEach(function(e) {
+      var popupContent = '<strong>Empresa:</strong> ' + e.nombre + '<br>' +
+                         '<strong>Tipo:</strong> ' + e.tipo + '<br>' +
+                         '<strong>Cobertura:</strong> ' + e.cobertura + '<br>' +
+                         '<strong>Concepto:</strong> ' + e.concepto;
+      L.marker(e.coords).addTo(map).bindPopup(popupContent);
+    });
+
+    // Datos para gráfico
+    var ctx = document.getElementById('barChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Local', 'Departamental', 'Nacional', 'Internacional', 'Multinacional', 'Transnacional'],
+        datasets: [{
+          label: 'Ejemplos asignados',
+          data: [1, 1, 1, 1, 1, 1],
+          backgroundColor: 'rgba(54, 162, 235, 0.7)'
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true, precision: 0 }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
